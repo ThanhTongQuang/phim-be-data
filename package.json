@@ -23,6 +23,7 @@
     "firebase-admin": "^11.10.1",
     "mongodb": "^4.8.1",
     "mongoose": "^7.3.4",
+    "mongoose-unique-validator": "^4.0.0",
     "node-fetch": "^3.2.10"
   },
   "devDependencies": {
