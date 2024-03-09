@@ -47,7 +47,7 @@ let dbName = "test" || process.env.DB || prodDBName;
 mongoose.connect(`mongodb+srv://tongquangthanh:tongquangthanh@cluster0.80gcgnc.mongodb.net/${dbName}?w=majority`)
   .then(async (db) => {
     console.log(`[database]: Connected to database ${dbName}!`, new Date());
-    checkRawData().then(_ => checkNotification());
+    setInterval(async () => checkRawData().then(_ => checkNotification()), 5000); // 5s
     setInterval(async () => checkRawData().then(_ => checkNotification()), 1000 * 60 * 60 * 24); // 1day
     // setTimeout(() => checkNotification(true), 16000); // TODO
     server.listen(port, async () => {
