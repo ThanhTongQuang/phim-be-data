@@ -3,10 +3,7 @@ import { MovieSchema } from "./mongoose/movie";
 import { SubscriptionSchema } from "./mongoose/subscription";
 import { UserSchema } from "./mongoose/user";
 
-export const checkNotification = async (result: boolean): Promise<void> => {
-  if (!result) {
-    return;
-  }
+export const checkNotification = async (): Promise<void> => {
   try {
     const users = await UserSchema.find({});
     const subscriptions = await SubscriptionSchema.find({});

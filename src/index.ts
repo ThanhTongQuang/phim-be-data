@@ -51,7 +51,7 @@ app.get("/", (req, res, next) => {
 
 server.listen(port, async () => {
   console.log(`[server]: Server is running at port: ${port}, current time: ${new Date()}`);
-  checkRawData().then(result => checkNotification(result))
-  setInterval(async () => checkRawData().then(result => checkNotification(result)), 1000 * 60 * 60 * 24); // 1day
+  checkRawData().then(_ => checkNotification())
+  setInterval(async () => checkRawData().then(_ => checkNotification()), 1000 * 60 * 60 * 24); // 1day
   // setTimeout(() => checkNotification(true), 16000); // TODO
 });

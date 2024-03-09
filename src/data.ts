@@ -16,7 +16,7 @@ const data: Document<any, any, any>[] = [];
 axios.defaults.httpsAgent = new https.Agent({ rejectUnauthorized: false, keepAlive: true });
 
 export const url = 'https://ophim1.com';
-export const checkRawData = async () => {
+export const checkRawData = async (): Promise<void> => {
   try {
     const time = Date.now();
 
@@ -75,9 +75,7 @@ export const checkRawData = async () => {
     console.log("Time on update db (h): ", (Date.now() - time) / 3600000);
   } catch (error) {
     console.error("Update db error: ", error);
-    return false;
   }
-  return true;
 };
 
 const addToArray = (arr: (string | number)[], item: string | number): (string | number)[] => {
