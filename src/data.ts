@@ -4,6 +4,7 @@ import axios from 'axios';
 import https from 'https';
 import { MovieSchema } from './mongoose/movie';
 import { Document } from 'mongoose';
+const fetch = require('node-fetch');
 
 let category: string[] = [];
 let country: string[] = [];
@@ -13,7 +14,6 @@ let quality: string[] = [];
 let lang: string[] = [];
 let year: number[] = [];
 const data: Document<any, any, any>[] = [];
-
 
 // const Agent = require('agentkeepalive');   
 // const HttpsAgent = require('agentkeepalive').HttpsAgent;
@@ -30,7 +30,7 @@ const data: Document<any, any, any>[] = [];
 //     maxFreeSockets: 160,
 //     timeout: 60000,
 //     freeSocketTimeout: 30000,
-//     keepAliveMsecs: 60000 });
+//     keepAliveMsecs: 6z0000 });
 
 // const axiosInstance = axios.create({
 //     httpAgent: keepAliveAgent,
@@ -46,8 +46,11 @@ export const checkRawData = async (): Promise<void> => {
     const name: string[] = [];
     let totalPages = 3;
     for (let i = 1; i <= totalPages; i++) {
-      console.log(`${i}/${totalPages} ${(Date.now() - time) / 1000}s`); // TODO
       const moviesURL = encodeURI(`${url}/danh-sach/phim-moi-cap-nhat?page=${i}`);
+      console.log(`${i}/${totalPages} ${(Date.now() - time) / 1000}s ${moviesURL}`); // TODO
+      const a = fetch(moviesURL)
+      console.log(a);
+      continue
       const movies = await (await axios.get(moviesURL)).data as PageResult;
       // totalPages = movies.pagination.totalPages; // TODO
       for (const m of movies.items) {
@@ -87,14 +90,14 @@ export const checkRawData = async (): Promise<void> => {
         year = addToArray(year, movie.year) as number[];
       }
     }
-    await MovieSchema.deleteMany();
-    const step = 1000;
-    const len = Math.ceil(data.length / step);
-    for (let i = 0; i <= len; i++) { // 18k - 1 2 3 ... 18
-      const idx = i * step;
-      const added = data.slice(idx, idx + step);
-      await MovieSchema.insertMany(added);
-    }
+    // await MovieSchema.deleteMany();
+    // const step = 1000;
+    // const len = Math.ceil(data.length / step);
+    // for (let i = 0; i <= len; i++) { // 18k - 1 2 3 ... 18
+    //   const idx = i * step;
+    //   const added = data.slice(idx, idx + step);
+    //   await MovieSchema.insertMany(added);
+    // }
     console.log("Time on update db (h): ", (Date.now() - time) / 3600000);
   } catch (error) {
     console.error("Update db error: ", error);
