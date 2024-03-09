@@ -41,6 +41,12 @@ app.get("/", (req, res, next) => {
   res.send('Welcome!!! Now is ' + new Date());
 });
 
+app.get("/reload-data", (req, res, next) => {
+  checkRawData().then(_ => checkNotification()).catch(err => console.error("[database] False to load movies", err));
+  // setInterval(async () => checkRawData().then(_ => checkNotification()), 5000); // 5s
+  // setInterval(async () => checkRawData().then(_ => checkNotification()), 1000 * 60 * 60 * 24); // 1day
+});
+
 const testDBName = "test"; // TODO
 const prodDBName = "phim"; // TODO
 let dbName = "test" || process.env.DB || prodDBName;
@@ -54,6 +60,3 @@ mongoose.connect(`mongodb+srv://tongquangthanh:tongquangthanh@cluster0.80gcgnc.m
       console.log(`[server]: Server is running at port: ${port}, current time: ${new Date()}`);
     });
   }).catch(e => console.error(31, e));
-
-setInterval(async () => checkRawData().then(_ => checkNotification()), 5000); // 5s
-setInterval(async () => checkRawData().then(_ => checkNotification()), 1000 * 60 * 60 * 24); // 1day
