@@ -17,6 +17,7 @@ axios.defaults.httpsAgent = new https.Agent({ rejectUnauthorized: false, keepAli
 
 export const url = 'https://ophim1.com';
 export const checkRawData = async (): Promise<void> => {
+  console.log(url); // TODO
   try {
     const time = Date.now();
 
