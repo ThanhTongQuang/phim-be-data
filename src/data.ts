@@ -13,11 +13,33 @@ let quality: string[] = [];
 let lang: string[] = [];
 let year: number[] = [];
 const data: Document<any, any, any>[] = [];
+
+
+// const Agent = require('agentkeepalive');   
+// const HttpsAgent = require('agentkeepalive').HttpsAgent;
+
+// const keepAliveAgent = new Agent({
+//     maxSockets: 160,
+//     maxFreeSockets: 160,
+//     timeout: 60000,
+//     freeSocketTimeout: 30000,
+//     keepAliveMsecs: 60000 });
+
+// const httpsKeepAliveAgent = new HttpsAgent({
+//     maxSockets: 160,
+//     maxFreeSockets: 160,
+//     timeout: 60000,
+//     freeSocketTimeout: 30000,
+//     keepAliveMsecs: 60000 });
+
+// const axiosInstance = axios.create({
+//     httpAgent: keepAliveAgent,
+//     httpsAgent: httpsKeepAliveAgent });
+axios.defaults.timeout = 60000;
 axios.defaults.httpsAgent = new https.Agent({ rejectUnauthorized: false, keepAlive: true });
 
 export const url = 'https://ophim1.com';
 export const checkRawData = async (): Promise<void> => {
-  console.log(url); // TODO
   try {
     const time = Date.now();
 
