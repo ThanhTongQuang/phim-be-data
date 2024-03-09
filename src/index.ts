@@ -23,13 +23,6 @@ app.use((req, res, next) => {
   next();
 });
 
-const testDBName = "test"; // TODO
-const prodDBName = "phim"; // TODO
-let dbName = "test" || process.env.DB || prodDBName;
-console.log(29, dbName);
-mongoose.connect(`mongodb+srv://tongquangthanh:tongquangthanh@cluster0.80gcgnc.mongodb.net/${dbName}?w=majority`)
-  .then(async (db) => console.log(`[database]: Connected to database ${dbName}!`)).catch(e => console.error(31, e));
-
 const normalizePort = (val: string) => {
   const port = parseInt(val, 10);
   if (isNaN(port)) return val;
@@ -48,9 +41,17 @@ app.get("/", (req, res, next) => {
   res.send('Welcome!!! Now is ' + new Date());
 });
 
-server.listen(port, async () => {
-  console.log(`[server]: Server is running at port: ${port}, current time: ${new Date()}`);
-  checkRawData().then(_ => checkNotification())
-  setInterval(async () => checkRawData().then(_ => checkNotification()), 1000 * 60 * 60 * 24); // 1day
-  // setTimeout(() => checkNotification(true), 16000); // TODO
-});
+const testDBName = "test"; // TODO
+const prodDBName = "phim"; // TODO
+let dbName = "test" || process.env.DB || prodDBName;
+console.log(29, dbName);
+mongoose.connect(`mongodb+srv://tongquangthanh:tongquangthanh@cluster0.80gcgnc.mongodb.net/${dbName}?w=majority`)
+  .then(async (db) => {
+    console.log(`[database]: Connected to database ${dbName}!`);
+    server.listen(port, async () => {
+      console.log(`[server]: Server is running at port: ${port}, current time: ${new Date()}`);
+      checkRawData().then(_ => checkNotification())
+      setInterval(async () => checkRawData().then(_ => checkNotification()), 1000 * 60 * 60 * 24); // 1day
+      // setTimeout(() => checkNotification(true), 16000); // TODO
+    });
+  }).catch(e => console.error(31, e));
