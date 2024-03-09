@@ -37,26 +37,15 @@ server.on("error", (error: any) => {
   if (error.syscall !== "listen") throw error;
 });
 
-app.get("/", (req, res, next) => {
-  res.send('Welcome!!! Now is ' + new Date());
-});
+app.get("/", (req, res, next) => res.send('Welcome!!! Now is ' + new Date()));
+app.get("/reload-data", (req, res, next) => checkRawData().then(_ => checkNotification()).catch(err => console.error("[database] False to load movies", err)));
 
-app.get("/reload-data", (req, res, next) => {
-  checkRawData().then(_ => checkNotification()).catch(err => console.error("[database] False to load movies", err));
-  // setInterval(async () => checkRawData().then(_ => checkNotification()), 5000); // 5s
-  // setInterval(async () => checkRawData().then(_ => checkNotification()), 1000 * 60 * 60 * 24); // 1day
-});
-
-const testDBName = "test"; // TODO
-const prodDBName = "phim"; // TODO
-let dbName = "test" || process.env.DB || prodDBName;
+const testDBName = "test";
+const prodDBName = "phim";
+let dbName = "test" || process.env.DB || prodDBName || testDBName;
 mongoose.connect(`mongodb+srv://tongquangthanh:tongquangthanh@cluster0.80gcgnc.mongodb.net/${dbName}?w=majority`)
-  .then(async (db) => {
+  .then(db => {
     console.log(`[database]: Connected to database ${dbName}!`, new Date());
-    // setInterval(async () => checkRawData().then(_ => checkNotification()), 5000); // 5s
-    // setInterval(async () => checkRawData().then(_ => checkNotification()), 1000 * 60 * 60 * 24); // 1day
-    // setTimeout(() => checkNotification(true), 16000); // TODO
-    server.listen(port, async () => {
-      console.log(`[server]: Server is running at port: ${port}, current time: ${new Date()}`);
-    });
-  }).catch(e => console.error(31, e));
+    // checkRawData(); // TODO debug
+    server.listen(port, () => console.log(`[server]: Server is running at port: ${port}, current time: ${new Date()}`));
+  }).catch(e => console.error(e));
