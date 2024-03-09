@@ -21,7 +21,7 @@ export const checkRawData = async () => {
     const time = Date.now();
 
     const name: string[] = [];
-    let totalPages = 2;
+    let totalPages = 3;
     for (let i = 1; i <= totalPages; i++) {
       // console.log(`${i}/${totalPages} ${(Date.now() - time) / 1000}s`); // TODO
       const moviesURL = encodeURI(`${url}/danh-sach/phim-moi-cap-nhat?page=${i}`);

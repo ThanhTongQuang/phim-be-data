@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import { checkRawData } from './data';
 import http from 'http';
 import mongoose from 'mongoose';
-import { initializeApp, cert } from "firebase-admin/app";
+import { initializeApp, cert, applicationDefault } from "firebase-admin/app";
 import { checkNotification } from './notification';
 
 let path = '/etc/secrets/android-phim-firebase-adminsdk.json';
@@ -11,7 +11,7 @@ dotenv.config();
 if (process.env.ENV === "dev") {
   path = 'etc/secrets/android-phim-firebase-adminsdk.json';
 }
-initializeApp({ credential: cert(path) });
+initializeApp({ credential: applicationDefault() });
 const app = express();
 
 app.use(express.json());
@@ -53,7 +53,5 @@ server.listen(port, async () => {
   console.log(`[server]: Server is running at port: ${port}, current time: ${new Date()}`);
   checkRawData().then(result => checkNotification(result))
   setInterval(async () => checkRawData().then(result => checkNotification(result)), 1000 * 60 * 60 * 24); // 1day
-  if (dbName === prodDBName) { // TODO
-  }
-  // setTimeout(() => checkNotification(true), 16000);
+  // setTimeout(() => checkNotification(true), 16000); // TODO
 });
