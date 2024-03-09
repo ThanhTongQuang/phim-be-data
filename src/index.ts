@@ -46,7 +46,7 @@ server.on("error", (error: any) => {
 });
 
 app.get("/", (req, res, next) => {
-  res.send('Welcome!!!');
+  res.send('Welcome!!! Now is ' + new Date());
 });
 
 server.listen(port, async () => {
