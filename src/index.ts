@@ -23,13 +23,12 @@ app.use((req, res, next) => {
   next();
 });
 
-const prodDBName = "test"; // TODO
-let dbName = process.env.DB || prodDBName;
-if (process.env.MODE === "review") {
-  dbName = "test";
-}
+const testDBName = "test"; // TODO
+const prodDBName = "phim"; // TODO
+let dbName = "test" || process.env.DB || prodDBName;
+console.log(29, dbName);
 mongoose.connect(`mongodb+srv://tongquangthanh:tongquangthanh@cluster0.80gcgnc.mongodb.net/${dbName}?w=majority`)
-  .then(async (db) => console.log(`[database]: Connected to database ${dbName}!`)).catch(e => console.error(e));
+  .then(async (db) => console.log(`[database]: Connected to database ${dbName}!`)).catch(e => console.error(31, e));
 
 const normalizePort = (val: string) => {
   const port = parseInt(val, 10);
