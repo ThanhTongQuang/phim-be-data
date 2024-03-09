@@ -23,7 +23,7 @@ export const checkRawData = async (): Promise<void> => {
     const name: string[] = [];
     let totalPages = 3;
     for (let i = 1; i <= totalPages; i++) {
-      // console.log(`${i}/${totalPages} ${(Date.now() - time) / 1000}s`); // TODO
+      console.log(`${i}/${totalPages} ${(Date.now() - time) / 1000}s`); // TODO
       const moviesURL = encodeURI(`${url}/danh-sach/phim-moi-cap-nhat?page=${i}`);
       const movies = await (await axios.get(moviesURL)).data as PageResult;
       // totalPages = movies.pagination.totalPages; // TODO
