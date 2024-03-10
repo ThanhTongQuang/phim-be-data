@@ -13,7 +13,9 @@ export interface Category {
 }
 
 export interface Country {
+  id: Guid | Guid[];
   name: string;
+  slug: string;
 }
 
 export interface Movie {

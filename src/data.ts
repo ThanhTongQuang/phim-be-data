@@ -41,6 +41,13 @@ export const checkRawData = async (): Promise<void> => {
               }
             });
           }
+          if (res.movie.country?.length > 0) {
+            res.movie.country.forEach(country => {
+              if (Array.isArray(country.id)) {
+                country.id = country.id[0];
+              }
+            });
+          }
         }
       }
     }
