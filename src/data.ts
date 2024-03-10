@@ -11,13 +11,13 @@ export const checkRawData = async (): Promise<void> => {
   try {
     const time = Date.now();
     const name: string[] = [];
-    let totalPages = 1;
+    let totalPages = 340;
     for (let i = 1; i <= totalPages; i++) {
       const moviesURL = encodeURI(`${url}/danh-sach/phim-moi-cap-nhat?page=${i}`);
       console.log(`${i}/${totalPages} ${(Date.now() - time) / 1000}s ${moviesURL}`); // TODO
       const responses = await fetch(moviesURL);
       const results: PageResult = await responses.json();
-      totalPages = results.pagination.totalPages; // TODO
+      // totalPages = results.pagination.totalPages; // TODO
       const moviePromises = [];
       for (const m of results.items) {
         const movieURL = encodeURI(`${url}/phim/${m.slug.replaceAll('‑', '-')}`);

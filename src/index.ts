@@ -52,7 +52,7 @@ mongoose.connect(`mongodb+srv://tongquangthanh:tongquangthanh@cluster0.80gcgnc.m
       console.log(`[server]: Server is running at port: ${port}, current time: ${new Date()}`)
       setInterval(async () => {
         try {
-          console.dir(await fetch('https://thnvn-phim.onrender.com/data'));
+          console.dir((await fetch('https://thnvn-phim.onrender.com/data')).json());
         } catch (error) {
           console.error(error);
         }
