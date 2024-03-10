@@ -17,7 +17,7 @@ export const checkRawData = async (): Promise<void> => {
       console.log(`${i}/${totalPages} ${(Date.now() - time) / 1000}s ${moviesURL}`); // TODO
       const responses = await fetch(moviesURL);
       const results: PageResult = await responses.json();
-      // totalPages = results.pagination.totalPages; // TODO
+      totalPages = results.pagination.totalPages; // TODO
       const moviePromises = [];
       for (const m of results.items) {
         const movieURL = encodeURI(`${url}/phim/${m.slug.replaceAll('‑', '-')}`);
