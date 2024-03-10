@@ -12,7 +12,7 @@ export const checkRawData = async (): Promise<void> => {
     const time = Date.now();
     const name: string[] = [];
     let totalPages = 340;
-    for (let i = 1; i <= totalPages; i++) {
+    for (let i = 1; i <= totalPages; i++) { // TODO
       const moviesURL = encodeURI(`${url}/danh-sach/phim-moi-cap-nhat?page=${i}`);
       console.log(`${i}/${totalPages} ${(Date.now() - time) / 1000}s ${moviesURL}`); // TODO
       const responses = await fetch(moviesURL);
@@ -34,6 +34,13 @@ export const checkRawData = async (): Promise<void> => {
           }
           res.movie.currentTotalEpisode = res.episodes[0]?.server_data?.length;
           data.push(res.movie);
+          if (res.movie.category?.length > 0) {
+            res.movie.category.forEach(category => {
+              if (Array.isArray(category.id)) {
+                category.id = category.id[0];
+              }
+            });
+          }
         }
       }
     }

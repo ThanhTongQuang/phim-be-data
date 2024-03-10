@@ -7,7 +7,9 @@ export interface Modified {
 }
 
 export interface Category {
+  id: Guid | Guid[];
   name: string;
+  slug: string;
 }
 
 export interface Country {
