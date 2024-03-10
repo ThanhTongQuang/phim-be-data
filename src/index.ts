@@ -5,6 +5,7 @@ import http from 'http';
 import mongoose from 'mongoose';
 import { initializeApp, cert, applicationDefault } from "firebase-admin/app";
 import { checkNotification } from './notification';
+const fetch = require('node-fetch');
 
 let path = '/etc/secrets/android-phim-firebase-adminsdk.json';
 dotenv.config();
@@ -46,6 +47,16 @@ let dbName = "test" || process.env.DB || prodDBName || testDBName;
 mongoose.connect(`mongodb+srv://tongquangthanh:tongquangthanh@cluster0.80gcgnc.mongodb.net/${dbName}?w=majority`)
   .then(db => {
     console.log(`[database]: Connected to database ${dbName}!`, new Date());
-    // checkRawData(); // TODO debug
-    server.listen(port, () => console.log(`[server]: Server is running at port: ${port}, current time: ${new Date()}`));
+    checkRawData(); // TODO debug
+    server.listen(port, () => {
+      console.log(`[server]: Server is running at port: ${port}, current time: ${new Date()}`)
+      setInterval(async () => {
+        try {
+          console.dir(await fetch('https://thnvn-phim.onrender.com/data'));
+        } catch (error) {
+          console.error(error);
+        }
+      }, 1000 * 60 * (5 - 0.05)); // 4.95p === 297s
+      setInterval(async () => checkRawData().then(_ => checkNotification()), 1000 * 60 * 60 * 24); // 1day
+    });
   }).catch(e => console.error(e));
