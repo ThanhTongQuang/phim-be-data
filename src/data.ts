@@ -43,6 +43,7 @@ export const checkRawData = async (): Promise<void> => {
     for (let i = 0; i <= len; i++) { // 18k - 1 2 3 ... 18
       const idx = i * step;
       const added = data.slice(idx, idx + step);
+      console.log(`Insert ${i}`);
       await MovieSchema.insertMany(added);
     }
     console.log("Time on update db (h): ", (Date.now() - time) / 3600000);
