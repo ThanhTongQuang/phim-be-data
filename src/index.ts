@@ -43,7 +43,7 @@ app.get("/reload-data", (req, res, next) => checkRawData().then(_ => checkNotifi
 
 const testDBName = "test";
 const prodDBName = "phim";
-let dbName = "test" || process.env.DB || prodDBName || testDBName;
+let dbName = "" || process.env.DB || prodDBName || testDBName;
 mongoose.connect(`mongodb+srv://tongquangthanh:tongquangthanh@cluster0.80gcgnc.mongodb.net/${dbName}?w=majority`)
   .then(db => {
     console.log(`[database]: Connected to database ${dbName}!`, new Date());

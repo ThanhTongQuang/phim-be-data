@@ -14,7 +14,7 @@ export const checkRawData = async (): Promise<void> => {
     let totalPages = 340;
     for (let i = 1; i <= totalPages; i++) { // TODO
       const moviesURL = encodeURI(`${url}/danh-sach/phim-moi-cap-nhat?page=${i}`);
-      console.log(`${i}/${totalPages} ${(Date.now() - time) / 1000}s ${moviesURL}`); // TODO
+      // console.log(`${i}/${totalPages} ${(Date.now() - time) / 1000}s ${moviesURL}`); // TODO
       const responses = await fetch(moviesURL);
       const results: PageResult = await responses.json();
       totalPages = results.pagination.totalPages; // TODO
@@ -57,7 +57,7 @@ export const checkRawData = async (): Promise<void> => {
     for (let i = 0; i <= len; i++) { // 18k - 1 2 3 ... 18
       const idx = i * step;
       const added = data.slice(idx, idx + step);
-      console.log(`Insert ${i}`);
+      // console.log(`Insert ${i}`); // TODO
       await MovieSchema.insertMany(added);
     }
     console.log("Time on update db (h): ", (Date.now() - time) / 3600000);
