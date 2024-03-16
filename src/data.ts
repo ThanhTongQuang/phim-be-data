@@ -9,6 +9,7 @@ const data: Movie[] = [];
 export const url = 'https://ophim1.com';
 export const checkRawData = async (): Promise<void> => {
   try {
+    console.log("[Database]: Start on get data");
     const time = Date.now();
     const name: string[] = [];
     let totalPages = 340;

@@ -5,10 +5,12 @@ import http from 'http';
 import mongoose from 'mongoose';
 import { initializeApp, cert, applicationDefault } from "firebase-admin/app";
 import { checkNotification } from './notification';
+import { getGasoline, parseGasoline } from './gasoline';
 const fetch = require('node-fetch');
 
 let path = '/etc/secrets/android-phim-firebase-adminsdk.json';
 dotenv.config();
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 if (process.env.ENV === "dev") {
   path = 'etc/secrets/android-phim-firebase-adminsdk.json';
 }
@@ -39,7 +41,9 @@ server.on("error", (error: any) => {
 });
 
 app.get("/", (req, res, next) => res.send('Welcome!!! Now is ' + new Date()));
-app.get("/reload-data", (req, res, next) => checkRawData().then(_ => checkNotification()).catch(err => console.error("[database] False to load movies", err)));
+app.get("/data", (req, res, next) => res.send({ isSuccess: true }));
+app.get("/gasoline", async (req, res, next) => res.status(200).json(await getGasoline()));
+app.post("/gasoline", async (req, res, next) => res.status(200).json(parseGasoline()));
 
 const testDBName = "test";
 const prodDBName = "phim";
@@ -47,12 +51,12 @@ let dbName = "" || process.env.DB || prodDBName || testDBName;
 mongoose.connect(`mongodb+srv://tongquangthanh:tongquangthanh@cluster0.80gcgnc.mongodb.net/${dbName}?w=majority`)
   .then(db => {
     console.log(`[database]: Connected to database ${dbName}!`, new Date());
-    checkRawData(); // TODO debug
+    // checkRawData(); // TODO debug
     server.listen(port, () => {
       console.log(`[server]: Server is running at port: ${port}, current time: ${new Date()}`)
       setInterval(async () => {
         try {
-          console.dir((await fetch('https://thnvn-phim.onrender.com/data')).json());
+          console.dir((await fetch('https://phim-be-data.onrender.com/data')).json());
         } catch (error) {
           console.error(error);
         }
