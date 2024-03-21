@@ -51,7 +51,7 @@ let dbName = "" || process.env.DB || prodDBName || testDBName;
 mongoose.connect(`mongodb+srv://tongquangthanh:tongquangthanh@cluster0.80gcgnc.mongodb.net/${dbName}?w=majority`)
   .then(db => {
     console.log(`[database]: Connected to database ${dbName}!`, new Date());
-    // checkRawData(); // TODO debug
+    checkRawData(); // TODO debug
     server.listen(port, () => {
       console.log(`[server]: Server is running at port: ${port}, current time: ${new Date()}`)
       setInterval(async () => {
