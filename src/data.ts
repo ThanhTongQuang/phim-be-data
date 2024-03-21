@@ -53,7 +53,7 @@ export const checkRawData = async (): Promise<void> => {
       }
     }
     await MovieSchema.deleteMany();
-    const step = 2000;
+    const step = 1500;
     const len = Math.ceil(data.length / step);
     for (let i = 0; i <= len; i++) { // 18k - 1 2 3 ... 18
       const idx = i * step;
