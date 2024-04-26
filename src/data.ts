@@ -5,6 +5,7 @@ import { Movie, MovieResult } from './models/movie';
 const fetch = require('node-fetch');
 
 const data: Movie[] = [];
+let i = 1;
 
 export const url = 'https://ophim1.com';
 export const checkRawData = async (): Promise<void> => {
@@ -13,9 +14,9 @@ export const checkRawData = async (): Promise<void> => {
     const time = Date.now();
     const name: string[] = [];
     let totalPages = 340;
-    for (let i = 1; i <= totalPages; i++) { // TODO
+    for (i = 1; i <= totalPages; i++) {
       const moviesURL = encodeURI(`${url}/danh-sach/phim-moi-cap-nhat?page=${i}`);
-      // console.log(`${i}/${totalPages} ${(Date.now() - time) / 1000}s ${moviesURL}`); // TODO
+      console.log(`${i}/${totalPages} ${(Date.now() - time) / 1000}s`); // TODO
       const responses = await fetch(moviesURL);
       const results: PageResult = await responses.json();
       totalPages = results.pagination.totalPages; // TODO
@@ -67,7 +68,7 @@ export const checkRawData = async (): Promise<void> => {
     }
     console.log("Time on update db (h): ", (Date.now() - time) / 3600000);
   } catch (error) {
-    console.error("Update db error: ", error);
+    console.error("Update db error: on page " + i + " ", error);
   }
 };
 
