@@ -8,16 +8,22 @@ const data: Movie[] = [];
 let i = 1;
 
 export const url = 'https://ophim1.com';
-export const checkRawData = async (deleteAll: boolean, from: number, to: number): Promise<void> => {
+export const checkRawData = async (): Promise<void> => {
   try {
     console.log("[Database]: Start on get data");
     const time = Date.now();
     const name: string[] = [];
-    for (i = from; i <= to; i++) {
+    let totalPages = 1;
+    for (i = 1; i <= totalPages; i++) {
       const moviesURL = encodeURI(`${url}/danh-sach/phim-moi-cap-nhat?page=${i}`);
-      console.log(`${i}/${to} ${(Date.now() - time) / 1000}s`); // TODO
+      console.log(`${i}/${totalPages} ${(Date.now() - time) / 1000}s`); // TODO
       const responses = await fetch(moviesURL);
+      const contentType = responses.headers.get("content-type");
+      if (!contentType.includes("application/json")) {
+        continue;
+      }
       const results: PageResult = await responses.json();
+      totalPages = results.pagination.totalPages; // TODO
       const moviePromises = [];
       for (const m of results.items) {
         const movieURL = encodeURI(`${url}/phim/${m.slug.replaceAll('‑', '-')}`);
@@ -26,6 +32,10 @@ export const checkRawData = async (deleteAll: boolean, from: number, to: number)
       const movieResult = await Promise.allSettled(moviePromises);
       for (const result of movieResult) {
         if (result.status === "fulfilled") {
+          const contentType = result.value.headers.get("content-type");
+          if (!contentType.includes("application/json")) {
+            continue;
+          }
           const res: MovieResult = await result.value.json();
           if (name.includes(res.movie.name)) {
             continue;
@@ -53,9 +63,7 @@ export const checkRawData = async (deleteAll: boolean, from: number, to: number)
     }
     console.log("[Database] Done on get " + data.length + " movies", (Date.now() - time) / 3600000);
     console.log("[Database] Start on delete old data", (Date.now() - time) / 3600000);
-    if (deleteAll) {
-      await MovieSchema.deleteMany();
-    }
+    await MovieSchema.deleteMany();
     console.log("[Database] Done on delete old data", (Date.now() - time) / 3600000);
     console.log("[Database] Start insert movies", (Date.now() - time) / 3600000);
     const step = 1500;
