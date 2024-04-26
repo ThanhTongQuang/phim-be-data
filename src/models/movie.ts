@@ -24,7 +24,7 @@ export interface Movie {
   chieurap: boolean;
   content: string;
   country: Country[];
-  created: Modified;
+  created?: Modified;
   director: string[];
   episode_current: string;
   episode_total: string;
