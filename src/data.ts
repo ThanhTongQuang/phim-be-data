@@ -12,6 +12,7 @@ export const checkRawData = async (): Promise<void> => {
   try {
     console.log("[Database]: Start on get data");
     const time = Date.now();
+    const name: string[] = [];
     let totalPages = 340;
     for (i = 1; i <= totalPages; i++) {
       const moviesURL = encodeURI(`${url}/danh-sach/phim-moi-cap-nhat?page=${i}`);
@@ -20,6 +21,11 @@ export const checkRawData = async (): Promise<void> => {
       const results: PageResult = await responses.json();
       totalPages = results.pagination.totalPages; // TODO
       for (const m of results.items) {
+        if (name.includes(m.name)) {
+          continue;
+        } else {
+          name.push(m.name);
+        }
         const movie: Movie = {
           ...m,
           actor: [],
