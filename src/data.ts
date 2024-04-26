@@ -52,8 +52,12 @@ export const checkRawData = async (): Promise<void> => {
         }
       }
     }
+    console.log("[Database] Done on get " + data.length + " movies", (Date.now() - time) / 3600000);
+    console.log("[Database] Start on delete old data", (Date.now() - time) / 3600000);
     await MovieSchema.deleteMany();
-    const step = 2000;
+    console.log("[Database] Done on delete old data", (Date.now() - time) / 3600000);
+    console.log("[Database] Start insert movies", (Date.now() - time) / 3600000);
+    const step = 1500;
     const len = Math.ceil(data.length / step);
     for (let i = 0; i <= len; i++) { // 18k - 1 2 3 ... 18
       const idx = i * step;
