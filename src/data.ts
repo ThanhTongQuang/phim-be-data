@@ -8,53 +8,54 @@ const data: Movie[] = [];
 let i = 1;
 
 export const url = 'https://ophim1.com';
-export const checkRawData = async (): Promise<void> => {
+export const checkRawData = async (deleteAll: boolean, from: number, to: number): Promise<void> => {
   try {
     console.log("[Database]: Start on get data");
     const time = Date.now();
     const name: string[] = [];
-    let totalPages = 340;
-    for (i = 1; i <= totalPages; i++) {
+    for (i = from; i <= to; i++) {
       const moviesURL = encodeURI(`${url}/danh-sach/phim-moi-cap-nhat?page=${i}`);
-      console.log(`${i}/${totalPages} ${(Date.now() - time) / 1000}s`); // TODO
+      console.log(`${i}/${to} ${(Date.now() - time) / 1000}s`); // TODO
       const responses = await fetch(moviesURL);
       const results: PageResult = await responses.json();
-      totalPages = results.pagination.totalPages; // TODO
+      const moviePromises = [];
       for (const m of results.items) {
-        if (name.includes(m.name)) {
-          continue;
-        } else {
-          name.push(m.name);
+        const movieURL = encodeURI(`${url}/phim/${m.slug.replaceAll('‑', '-')}`);
+        moviePromises.push(fetch(movieURL));
+      }
+      const movieResult = await Promise.allSettled(moviePromises);
+      for (const result of movieResult) {
+        if (result.status === "fulfilled") {
+          const res: MovieResult = await result.value.json();
+          if (name.includes(res.movie.name)) {
+            continue;
+          } else {
+            name.push(res.movie.name);
+          }
+          res.movie.currentTotalEpisode = res.episodes[0]?.server_data?.length;
+          data.push(res.movie);
+          if (res.movie.category?.length > 0) {
+            res.movie.category.forEach(category => {
+              if (Array.isArray(category.id)) {
+                category.id = category.id[0];
+              }
+            });
+          }
+          if (res.movie.country?.length > 0) {
+            res.movie.country.forEach(country => {
+              if (Array.isArray(country.id)) {
+                country.id = country.id[0];
+              }
+            });
+          }
         }
-        const movie: Movie = {
-          ...m,
-          actor: [],
-          category: [],
-          chieurap: false,
-          content: '',
-          country: [],
-          director: [],
-          episode_current: '',
-          episode_total: '',
-          is_copyright: '',
-          lang: '',
-          notify: '',
-          quality: '',
-          showtimes: '',
-          status: '',
-          sub_docquyen: '',
-          time: '',
-          trailer_url: '',
-          type: '',
-          view: 0,
-          currentTotalEpisode: 0,
-        };
-        data.push(movie);
       }
     }
     console.log("[Database] Done on get " + data.length + " movies", (Date.now() - time) / 3600000);
     console.log("[Database] Start on delete old data", (Date.now() - time) / 3600000);
-    await MovieSchema.deleteMany();
+    if (deleteAll) {
+      await MovieSchema.deleteMany();
+    }
     console.log("[Database] Done on delete old data", (Date.now() - time) / 3600000);
     console.log("[Database] Start insert movies", (Date.now() - time) / 3600000);
     const step = 1500;

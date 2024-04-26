@@ -20,37 +20,36 @@ export const checkRawData = async (): Promise<void> => {
       const responses = await fetch(moviesURL);
       const results: PageResult = await responses.json();
       totalPages = results.pagination.totalPages; // TODO
-      const moviePromises = [];
       for (const m of results.items) {
-        const movieURL = encodeURI(`${url}/phim/${m.slug.replaceAll('‑', '-')}`);
-        moviePromises.push(fetch(movieURL));
-      }
-      const movieResult = await Promise.allSettled(moviePromises);
-      for (const result of movieResult) {
-        if (result.status === "fulfilled") {
-          const res: MovieResult = await result.value.json();
-          if (name.includes(res.movie.name)) {
-            continue;
-          } else {
-            name.push(res.movie.name);
-          }
-          res.movie.currentTotalEpisode = res.episodes[0]?.server_data?.length;
-          data.push(res.movie);
-          if (res.movie.category?.length > 0) {
-            res.movie.category.forEach(category => {
-              if (Array.isArray(category.id)) {
-                category.id = category.id[0];
-              }
-            });
-          }
-          if (res.movie.country?.length > 0) {
-            res.movie.country.forEach(country => {
-              if (Array.isArray(country.id)) {
-                country.id = country.id[0];
-              }
-            });
-          }
+        if (name.includes(m.name)) {
+          continue;
+        } else {
+          name.push(m.name);
         }
+        const movie: Movie = {
+          ...m,
+          actor: [],
+          category: [],
+          chieurap: false,
+          content: '',
+          country: [],
+          director: [],
+          episode_current: '',
+          episode_total: '',
+          is_copyright: '',
+          lang: '',
+          notify: '',
+          quality: '',
+          showtimes: '',
+          status: '',
+          sub_docquyen: '',
+          time: '',
+          trailer_url: '',
+          type: '',
+          view: 0,
+          currentTotalEpisode: 0,
+        };
+        data.push(movie);
       }
     }
     console.log("[Database] Done on get " + data.length + " movies", (Date.now() - time) / 3600000);
