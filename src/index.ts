@@ -57,8 +57,11 @@ async function check() {
   const results: PageResult = await responses.json();
   const totalPage = results.pagination.totalPages;
   const numOfExc = Math.ceil(totalPage / step);
-  for (let i = 0; i <= numOfExc; i++) {
-    checkRawData(i === 0, step * i + 1, step * (i + 1)); // TODO debug
+  console.log(numOfExc, totalPage);
+  for (let i = 0; i < numOfExc; i++) {
+    setTimeout(() => {
+      checkRawData(i === 0, step * i + 1, step * (i + 1)); // TODO debug
+    }, i * 60 * 1000); // 0 1 2... min 
   }
   return;
 }
