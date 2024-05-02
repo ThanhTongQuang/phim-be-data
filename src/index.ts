@@ -46,7 +46,7 @@ app.get("/gasoline", async (req, res, next) => res.status(200).json(await getGas
 app.post("/gasoline", async (req, res, next) => res.status(200).json(parseGasoline()));
 
 const testDBName = "test";
-const prodDBName = "";
+const prodDBName = "phim";
 let dbName = "" || process.env.DB || prodDBName || testDBName;
 mongoose.connect(`mongodb+srv://tongquangthanh:tongquangthanh@cluster0.80gcgnc.mongodb.net/${dbName}?w=majority`)
   .then(db => {
